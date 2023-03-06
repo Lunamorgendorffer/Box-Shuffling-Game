@@ -117,6 +117,7 @@ for(let i= 1; i <= numberBoxes; i++){
             /* le joueur à deja cliqué sur une boite déja grisée */
             showReaction ("notice", newbox)
             shuffleChildren(board)
+            stop()
         }
     })
 }
