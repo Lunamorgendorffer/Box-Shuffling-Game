@@ -26,12 +26,32 @@ function shuffleChildren(parent){
     }
 }
 
+//fonction qui remélange les boîtes lorsqu'il y a une erreur
+function reshuffleBoxes(){
+    //On sélectionne le conteneur de boîtes à l'aide de document.querySelector("#board")
+    const board = document.querySelectorAll("#board")
+    //puis on appelle la fonction shuffleChildren pour remélanger les boîtes
+    shuffleChildren(board)
+    board.querySelectorAll(".box-valid").forEach(function(validBox){
+        //On supprime la classe "box-valid" de toutes les boîtes valides (celles qui ont été cliquées dans le bon ordre)
+        validBox.classList.remove("box-valid")
+    })
+    // On réinitialise la variable nb à 1 pour que le joueur puisse recommencer à partir de la première boîte
+    nb= 1
+}
+
+
 function showReaction(type,clickedBox){
     clickedBox.classList.add(type)
     if(type !== "sucess"){
         setTimeout(function(){
             clickedBox.classList.remove(type)
         }, 800)
+    }
+    else if (i > nb){
+        //remélange les boîtes lorsque le joueur clique sur une boîte dans le mauvais ordre + afficher la réaction "erreur"
+        showReaction ("error", newbox)
+        reshuffleBoxes();
     }
 }
 
