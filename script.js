@@ -1,3 +1,9 @@
+const box = document.createElement("div");
+box.classList.add("box");
+
+const board = document.querySelector("#board");
+let nb =1
+
 //fonction pour demander le nombre de boîtes de départ au joueur
 function askNumberBoxes(){
     //On demande à l'utilisateur de saisir le nombre de boîtes qu'il souhaite utiliser pour jouer
@@ -26,41 +32,19 @@ function shuffleChildren(parent){
     }
 }
 
-//fonction qui remélange les boîtes lorsqu'il y a une erreur
-function reshuffleBoxes(){
-    //On sélectionne le conteneur de boîtes à l'aide de document.querySelector("#board")
-    const board = document.querySelectorAll("#board")
-    //puis on appelle la fonction shuffleChildren pour remélanger les boîtes
-    shuffleChildren(board)
-    board.querySelectorAll(".box-valid").forEach(function(validBox){
-        //On supprime la classe "box-valid" de toutes les boîtes valides (celles qui ont été cliquées dans le bon ordre)
-        validBox.classList.remove("box-valid")
-    })
-    // On réinitialise la variable nb à 1 pour que le joueur puisse recommencer à partir de la première boîte
-    nb= 1
-}
 
-
-function showReaction(type,clickedBox){
-    clickedBox.classList.add(type)
-    if(type !== "sucess"){
-        setTimeout(function(){
-            clickedBox.classList.remove(type)
+//Fonction pour voir la reaction des boites 
+function showReaction(type,clickedBox){ // fonction prend pour argument type et clickebox
+    clickedBox.classList.add(type) // ajout de la class type à clickebox
+    if(type !== "sucess"){ // si type n'est pas egal à success alors 
+            // la fonction settimeout defini un compte à rebours en millisecondes 
+            setTimeout(function(){
+            // on enleve la class type a cliked box et on défini une minutire de 800 milliseconde 
+            clickedBox.classList.remove(type) 
         }, 800)
     }
-    else if (i > nb){
-        //remélange les boîtes lorsque le joueur clique sur une boîte dans le mauvais ordre + afficher la réaction "erreur"
-        showReaction ("error", newbox)
-        reshuffleBoxes();
-    }
 }
 
-
-const box = document.createElement("div");
-box.classList.add("box");
-
-const board = document.querySelector("#board");
-let nb =1
 
 let numberBoxes = askNumberBoxes();
 
@@ -83,17 +67,20 @@ for(let i= 1; i <= numberBoxes; i++){
             }
             nb++
         }
-        else if ( i> nb){
-            /* Si le num de la boite est sup à nb, c'st que le joueur à cliqu" une boite trop elevé*/
+        else if ( i > nb){
+            /* Si le num de la boite est sup à nb, c'st que le joueur à clique une boite trop elevé*/
             showReaction ("error", newbox)
             nb = 1
             board.querySelectorAll(".box-valid").forEach (function(validBox){
+                //On supprime la classe "box-valid" de toutes les boîtes valides (celles qui ont été cliquées dans le bon ordre)
                 validBox.classList.remove("box-valid")
+                shuffleChildren(board)
             })
         }
         else{
             /* le joueur à deja cliqué sur une boite déja grisée */
             showReaction ("notice", newbox)
+            shuffleChildren(board)
         }
     })
 }
