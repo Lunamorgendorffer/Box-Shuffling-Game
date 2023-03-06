@@ -45,6 +45,23 @@ function showReaction(type,clickedBox){ // fonction prend pour argument type et 
     }
 }
 
+function timer(){
+    const startTime = new Date().getTime()
+    let timerInterval = setInterval(() => { // fonction pour maj le timer toutes les secondes 
+      const currentTime = new Date().getTime()// on prendre l'heure d'aujourd'hui 
+      const elapsedTime = currentTime - startTime // diference entre l'heure de début du timer et e temps écoulé depuis que le jeux a commencé
+      const seconds = Math.floor(elapsedTime / 1000) // temps converti en seconde s
+      const minutes = Math.floor(seconds / 60) //// temps converti en minutes
+      const remainingSeconds = seconds % 60
+      const timeString = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
+      document.querySelector('#timer').textContent = timeString
+    }, 1000);
+  
+    return timerInterval
+}
+
+let timerInterval = null;
+
 
 let numberBoxes = askNumberBoxes();
 
@@ -66,6 +83,7 @@ for(let i= 1; i <= numberBoxes; i++){
                 })
             }
             nb++
+            shuffleChildren(board)
         }
         else if ( i > nb){
             /* Si le num de la boite est sup à nb, c'st que le joueur à clique une boite trop elevé*/
