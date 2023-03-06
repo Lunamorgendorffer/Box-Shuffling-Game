@@ -51,8 +51,15 @@ function timer(){
       const currentTime = new Date().getTime()// on prendre l'heure d'aujourd'hui 
       const elapsedTime = currentTime - startTime // diference entre l'heure de début du timer et e temps écoulé depuis que le jeux a commencé
       const seconds = Math.floor(elapsedTime / 1000) // temps converti en seconde s
-      const minutes = Math.floor(seconds / 60) //// temps converti en minutes
+      const minutes = Math.floor(seconds / 60) // temps converti en minutes
       const remainingSeconds = seconds % 60
+      /*on creer une const pour afficher un timer sous forme de minutes:secondes sur la page web
+      on appelle la fonction toString pour l'appliquer à la variable minute et remainingSeconds pour les convertir en chaine de caractères
+      et ajouter un 0 devant si c'est inferieur à 2 caractères.
+      timeString est la pour insérer les valeurs minutes et remainingSeconds dans la chaîne.
+      fonction textContent est appelée sur l'élément HTML avec l'ID "timer" pour mettre à jour le contenu textuel de cet élément avec la valeur de la variable timeString. 
+      Cela permet d'afficher le timer actualisé sur la page web.
+      */
       const timeString = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
       document.querySelector('#timer').textContent = timeString
     }, 1000);
