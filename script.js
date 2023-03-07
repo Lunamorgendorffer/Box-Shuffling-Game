@@ -45,40 +45,27 @@ function showReaction(type,clickedBox){ // fonction prend pour argument type et 
     }
 }
 
-const ret = document.getElementById("timer");
-const startBtn = document.querySelector("#start-timer");
+let startTime;
+let timerInterval;
 
-let counter = 0;
-let interval;
-
-function stop() {
-  clearInterval(interval);
-  startBtn.disabled = false;
+//fonction pour commencer le chronomètre.
+function startTimer() {
+  startTime = Date.now() // obtenir le temps en millisecondes
+  timerInterval = setInterval(updateTimer, 1000); // mise à jour du chrono toutes les secondes
+}
+/*fonction qui sert à mettre à jour le temps affiché sur l'écran et  
+permet aux joueurs de suivre le temps restant pendant la partie et de savoir combien de temps ils ont utilisé pour terminer la partie.
+*/
+function updateTimer() {
+  const elapsedTime = Math.floor((Date.now() - startTime) / 1000); // conversion du temps en secondes
+  const timerElement = document.querySelector("#timer") 
+  timerElement.innerText = `Temps écoulé : ${elapsedTime} secondes`// ajout du texte sur la page web 
 }
 
-function convertSec(cnt) {
-  let sec = cnt % 60;
-  let min = Math.floor(cnt / 60);
-  if (sec < 10) {
-    if (min < 10) {
-      return "0" + min + ":0" + sec;
-    } else {
-      return min + ":0" + sec;
-    }
-  } else if ((min < 10) && (sec >= 10)) {
-    return "0" + min + ":" + sec;
-  } else {
-    return min + ":" + sec;
-  }
+//fonction pour arrêter le chronomètre lorsque la partie est terminée ou lorsqu'une erreur survient.
+function stopTimer() {
+  clearInterval(timerInterval)// arrêter le timer 
 }
-
-function start() {
-  startBtn.disabled = true;
-  interval = setInterval(function() {
-    ret.innerHTML = convertSec(counter++); // timer start counting here...
-  }, 1000);
-}
-
 
 let numberBoxes = askNumberBoxes();
 
@@ -95,9 +82,16 @@ for(let i= 1; i <= numberBoxes; i++){
             newbox.classList.add ("box-valid")
             /* Si nv est egal au nbre de boite, c'est que le dernier clic était sur la derniere boite */
             if (nb == board.children.length){
-                board.querySelectorAll(".box").forEach(function(box){
-                    showReaction ("sucess", box)
-                })
+              board.querySelectorAll(".box").forEach(function(box){
+                showReaction ("sucess", box)
+                stopTimer();
+              })
+              const rejouer = document.createElement('button')
+              rejouer.setAttribute('id','rejouer')
+              rejouer.innerHTML ='rejouer';
+              document.body.appendChild(rejouer)
+              rejouer.onclick = () => document.location.reload()
+
             }
             nb++
             shuffleChildren(board)
@@ -110,17 +104,18 @@ for(let i= 1; i <= numberBoxes; i++){
                 //On supprime la classe "box-valid" de toutes les boîtes valides (celles qui ont été cliquées dans le bon ordre)
                 validBox.classList.remove("box-valid")
                 shuffleChildren(board)
-                stop()
+                stopTimer()
             })
         }
         else{
             /* le joueur à deja cliqué sur une boite déja grisée */
             showReaction ("notice", newbox)
             shuffleChildren(board)
-            stop()
+            stopTimer()
         }
     })
 }
 
+startTimer();
 shuffleChildren(board)
 
